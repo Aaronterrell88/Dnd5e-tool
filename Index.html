@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate D&D App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 5e theme */
+        .accent-color { color: #3b82f6; } /* Blue for 5e */
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+    <nav class="bg-gray-800 p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Ultimate D&D (5e)</h1>
+        <ul class="flex space-x-4">
+            <li><a href="#character" class="hover:text-blue-400">Character Creator</a></li>
+            <li><a href="#calculators" class="hover:text-blue-400">Calculators</a></li>
+            <li><a id="dice-link" class="hover:text-blue-400 cursor-pointer">Dice Roller</a></li>
+            <!-- Add more menu items as we build sections -->
+        </ul>
+    </nav>
+    <main class="flex-grow p-6">
+        <section id="character">
+            <h2 class="text-xl mb-4 accent-color">Character Creator (5e)</h2>
+            <ul class="flex space-x-4 mb-4">
+                <li><a id="sheet-tab" class="hover:text-blue-400 cursor-pointer">Sheet</a></li>
+                <li><a id="inventory-tab" class="hover:text-blue-400 cursor-pointer">Equipment & Inventory</a></li>
+            </ul>
+            <div id="sheet">
+                <form class="space-y-6">
+                    <!-- Top: Player Info and Character Description -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label for="character-name" class="block mb-1">Character Name:</label>
+                            <input id="character-name" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="class" class="block mb-1">Class:</label>
+                            <select id="class" class="bg-gray-700 text-white p-2 rounded w-full">
+                                <option value="">Select Class</option>
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                        <div>
+                            <label for="level" class="block mb-1">Level:</label>
+                            <input id="level" type="number" min="1" max="20" value="1" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="background" class="block mb-1">Background:</label>
+                            <select id="background" class="bg-gray-700 text-white p-2 rounded w-full">
+                                <option value="">Select Background</option>
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                        <div>
+                            <label for="player-name" class="block mb-1">Player Name:</label>
+                            <input id="player-name" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="race" class="block mb-1">Race:</label>
+                            <select id="race" class="bg-gray-700 text-white p-2 rounded w-full">
+                                <option value="">Select Race</option>
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                        <div>
+                            <label for="alignment" class="block mb-1">Alignment:</label>
+                            <select id="alignment" class="bg-gray-700 text-white p-2 rounded w-full">
+                                <option value="Lawful Good">Lawful Good</option>
+                                <option value="Neutral Good">Neutral Good</option>
+                                <option value="Chaotic Good">Chaotic Good</option>
+                                <option value="Lawful Neutral">Lawful Neutral</option>
+                                <option value="True Neutral">True Neutral</option>
+                                <option value="Chaotic Neutral">Chaotic Neutral</option>
+                                <option value="Lawful Evil">Lawful Evil</option>
+                                <option value="Neutral Evil">Neutral Evil</option>
+                                <option value="Chaotic Evil">Chaotic Evil</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="experience-points" class="block mb-1">Experience Points:</label>
+                            <input id="experience-points" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                    </div>
+                    <!-- Appearance and Other Description -->
+                    <div class="grid grid-cols-4 gap-4">
+                        <div>
+                            <label for="age" class="block mb-1">Age:</label>
+                            <input id="age" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="height" class="block mb-1">Height:</label>
+                            <input id="height" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="weight" class="block mb-1">Weight:</label>
+                            <input id="weight" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="eyes" class="block mb-1">Eyes:</label>
+                            <input id="eyes" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="skin" class="block mb-1">Skin:</label>
+                            <input id="skin" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                        <div>
+                            <label for="hair" class="block mb-1">Hair:</label>
+                            <input id="hair" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                        </div>
+                    </div>
+                    <!-- Stats (left, vertical) and HP/AC/Resistances (right) -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h3 class="text-lg accent-color">Ability Scores</h3>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="strength" class="block mb-1">Strength:</label>
+                                    <input id="strength" type="number" min="1" max="30" class="bg-gray-700 text-white p-2 rounded w-full">
+                                </div>
+                                <div class="w-24">
+                                    <label class="block mb-1">Mod:</label>
+                                    <span id="str-mod" class="bg-gray-800 p-2 rounded block text-center">0</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="dexterity" class="block mb-1">Dexterity:</label>
+                                    <input id="dexterity" type="number" min="1" max="30" class="bg-gray-700 text-white p-2 rounded w-full">
+                                </div>
+                                <div class="w-24">
+                                    <label class="block mb-1">Mod:</label>
+                                    <span id="dex-mod" class="bg-gray-800 p-2 rounded block text-center">0</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="constitution" class="block mb-1">Constitution:</label>
+                                    <input id="constitution" type="number" min="1" max="30" class="bg-gray-700 text-white p-2 rounded w-full">
+                                </div>
+                                <div class="w-24">
+                                    <label class="block mb-1">Mod:</label>
+                                    <span id="con-mod" class="bg-gray-800 p-2 rounded block text-center">0</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="intelligence" class="block mb-1">Intelligence:</label>
+                                    <input id="intelligence" type="number" min="1" max="30" class="bg-gray-700 text-white p-2 rounded w-full">
+                                </div>
+                                <div class="w-24">
+                                    <label class="block mb-1">Mod:</label>
+                                    <span id="int-mod" class="bg-gray-800 p-2 rounded block text-center">0</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="wisdom" class="block mb-1">Wisdom:</label>
+                                    <input id="wisdom" type="number" min="1" max="30" class="bg-gray-700 text-white p-2 rounded w-full">
+                                </div>
+                                <div class="w-24">
+                                    <label class="block mb-1">Mod:</label>
+                                    <span id="wis-mod" class="bg-gray-800 p-2 rounded block text-center">0</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="charisma" class="block mb-1">Charisma:</label>
+                                    <input id="charisma" type="number" min="1" max="30" class="bg-gray-700 text-white p-2 rounded w-full">
+                                </div>
+                                <div class="w-24">
+                                    <label class="block mb-1">Mod:</label>
+                                    <span id="cha-mod" class="bg-gray-800 p-2 rounded block text-center">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg accent-color">Combat Stats</h3>
+                            <div>
+                                <label for="armor-class" class="block mb-1">Armor Class:</label>
+                                <input id="armor-class" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="initiative" class="block mb-1">Initiative:</label>
+                                    <input id="initiative" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                                <span class="text-sm">(Dex Mod)</span>
+                            </div>
+                            <div>
+                                <label for="speed" class="block mb-1">Speed:</label>
+                                <input id="speed" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                            </div>
+                            <div>
+                                <label for="hit-point-max" class="block mb-1">Hit Point Maximum:</label>
+                                <input id="hit-point-max" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                            </div>
+                            <div>
+                                <label for="current-hit-points" class="block mb-1">Current Hit Points:</label>
+                                <input id="current-hit-points" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                            </div>
+                            <div>
+                                <label for="temporary-hit-points" class="block mb-1">Temporary Hit Points:</label>
+                                <input id="temporary-hit-points" type="number" class="bg-gray-700 text-white p-2 rounded w-full">
+                            </div>
+                            <div>
+                                <label for="hit-dice" class="block mb-1">Hit Dice:</label>
+                                <input id="hit-dice" type="text" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                            </div>
+                            <div>
+                                <label for="death-saves" class="block mb-1">Death Saves (Successes/Failures):</label>
+                                <input id="death-saves" type="text" class="bg-gray-700 text-white p-2 rounded w-full" placeholder="e.g., 0/0">
+                            </div>
+                            <div>
+                                <label for="resistances" class="block mb-1">Resistances/Immunities:</label>
+                                <textarea id="resistances" class="bg-gray-700 text-white p-2 rounded w-full"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Saves (left) and Proficiency Bonus (right, across from saves) -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h3 class="text-lg accent-color">Saving Throws</h3>
+                            <div class="flex items-center space-x-4">
+                                <input type="checkbox" id="str-save-prof" class="mr-2">
+                                <div class="flex-1">
+                                    <label for="str-save" class="block mb-1">Strength:</label>
+                                    <input id="str-save" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input type="checkbox" id="dex-save-prof" class="mr-2">
+                                <div class="flex-1">
+                                    <label for="dex-save" class="block mb-1">Dexterity:</label>
+                                    <input id="dex-save" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input type="checkbox" id="con-save-prof" class="mr-2">
+                                <div class="flex-1">
+                                    <label for="con-save" class="block mb-1">Constitution:</label>
+                                    <input id="con-save" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input type="checkbox" id="int-save-prof" class="mr-2">
+                                <div class="flex-1">
+                                    <label for="int-save" class="block mb-1">Intelligence:</label>
+                                    <input id="int-save" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input type="checkbox" id="wis-save-prof" class="mr-2">
+                                <div class="flex-1">
+                                    <label for="wis-save" class="block mb-1">Wisdom:</label>
+                                    <input id="wis-save" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input type="checkbox" id="cha-save-prof" class="mr-2">
+                                <div class="flex-1">
+                                    <label for="cha-save" class="block mb-1">Charisma:</label>
+                                    <input id="cha-save" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg accent-color">Proficiency Bonus</h3>
+                            <div>
+                                <label for="proficiency-bonus" class="block mb-1">Proficiency Bonus:</label>
+                                <input id="proficiency-bonus" type="number" min="2" max="6" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label for="passive-perception" class="block mb-1">Passive Wisdom (Perception):</label>
+                                    <input id="passive-perception" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="inspiration" class="block mb-1">Inspiration:</label>
+                                <input id="inspiration" type="checkbox" class="mr-2"> Yes
+                            </div>
+                            <!-- Other proficiencies like languages, tools, etc. -->
+                            <div>
+                                <label for="other-proficiencies" class="block mb-1">Other Proficiencies & Languages:</label>
+                                <textarea id="other-proficiencies" class="bg-gray-700 text-white p-2 rounded w-full"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Attacks (left: melee, ranged) and Skills (right) -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h3 class="text-lg accent-color">Attacks & Spellcasting</h3>
+                            <div>
+                                <label for="melee-attack" class="block mb-1">Melee/Unarmed/Weapon Attack (Auto-pull from equipped):</label>
+                                <textarea id="melee-attack" class="bg-gray-700 text-white p-2 rounded w-full"></textarea>
+                            </div>
+                            <div>
+                                <label for="ranged-attack" class="block mb-1">Ranged Attack (Auto-pull from equipped):</label>
+                                <textarea id="ranged-attack" class="bg-gray-700 text-white p-2 rounded w-full"></textarea>
+                            </div>
+                            <div>
+                                <label for="other-attacks" class="block mb-1">Other Attacks/Spells:</label>
+                                <textarea id="other-attacks" class="bg-gray-700 text-white p-2 rounded w-full h-32"></textarea>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-lg accent-color">Skills</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="acrobatics-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="acrobatics" class="block mb-1">Acrobatics (Dex):</label>
+                                        <input id="acrobatics" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="animal-handling-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="animal-handling" class="block mb-1">Animal Handling (Wis):</label>
+                                        <input id="animal-handling" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="arcana-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="arcana" class="block mb-1">Arcana (Int):</label>
+                                        <input id="arcana" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="athletics-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="athletics" class="block mb-1">Athletics (Str):</label>
+                                        <input id="athletics" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="deception-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="deception" class="block mb-1">Deception (Cha):</label>
+                                        <input id="deception" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="history-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="history" class="block mb-1">History (Int):</label>
+                                        <input id="history" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="insight-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="insight" class="block mb-1">Insight (Wis):</label>
+                                        <input id="insight" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="intimidation-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="intimidation" class="block mb-1">Intimidation (Cha):</label>
+                                        <input id="intimidation" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="investigation-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="investigation" class="block mb-1">Investigation (Int):</label>
+                                        <input id="investigation" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="medicine-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="medicine" class="block mb-1">Medicine (Wis):</label>
+                                        <input id="medicine" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="nature-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="nature" class="block mb-1">Nature (Int):</label>
+                                        <input id="nature" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="perception-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="perception" class="block mb-1">Perception (Wis):</label>
+                                        <input id="perception" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="performance-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="performance" class="block mb-1">Performance (Cha):</label>
+                                        <input id="performance" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="persuasion-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="persuasion" class="block mb-1">Persuasion (Cha):</label>
+                                        <input id="persuasion" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="religion-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="religion" class="block mb-1">Religion (Int):</label>
+                                        <input id="religion" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="sleight-of-hand-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="sleight-of-hand" class="block mb-1">Sleight of Hand (Dex):</label>
+                                        <input id="sleight-of-hand" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="stealth-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="stealth" class="block mb-1">Stealth (Dex):</label>
+                                        <input id="stealth" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="survival-prof" class="mr-2">
+                                    <div class="flex-1">
+                                        <label for="survival" class="block mb-1">Survival (Wis):</label>
+                                        <input id="survival" type="number" class="bg-gray-700 text-white p-2 rounded w-full" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Page-wide: Special Abilities and Notes -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg accent-color">Personality and Background</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="personality-traits" class="block mb-1">Personality Traits:</label>
+                                <textarea id="personality-traits" class="bg-gray-700 text-white p-2 rounded w-full h-24"></textarea>
+                            </div>
+                            <div>
+                                <label for="ideals" class="block mb-1">Ideals:</label>
+                                <textarea id="ideals" class="bg-gray-700 text-white p-2 rounded w-full h-24"></textarea>
+                            </div>
+                            <div>
+                                <label for="bonds" class="block mb-1">Bonds:</label>
+                                <textarea id="bonds" class="bg-gray-700 text-white p-2 rounded w-full h-24"></textarea>
+                            </div>
+                            <div>
+                                <label for="flaws" class="block mb-1">Flaws:</label>
+                                <textarea id="flaws" class="bg-gray-700 text-white p-2 rounded w-full h-24"></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="features-traits" class="block mb-1">Features & Traits:</label>
+                            <textarea id="features-traits" class="bg-gray-700 text-white p-2 rounded w-full h-32"></textarea>
+                        </div>
+                        <div>
+                            <label for="notes" class="block mb-1">Additional Notes & Backstory:</label>
+                            <textarea id="notes" class="bg-gray-700 text-white p-2 rounded w-full h-32"></textarea>
+                        </div>
+                    </div>
+                    <div class="space-x-4">
+                        <button id="auto-fill" type="button" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Auto-Fill Options</button>
+                        <button id="roll-stats" type="button" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Roll Stats</button>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded">Save Character</button>
+                    </div>
+                </form>
+            </div>
+            <div id="inventory" class="hidden">
+                <h3 class="text-lg mb-4 accent-color">Inventory</h3>
+                <div class="mb-6">
+                    <label for="item-list" class="block mb-2">All Items (one per line):</label>
+                    <textarea id="item-list" class="bg-gray-700 text-white p-2 rounded w-full h-32" placeholder="e.g., Potion of Healing\nBackpack\n..."></textarea>
+                </div>
+                <h3 class="text-lg mb-4 accent-color">Equipped Items</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="weapon-1" class="block mb-1">Weapon 1 (Main Hand or Two-Hander):</label>
+                        <input id="weapon-1" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="weapon-2" class="block mb-1">Weapon 2 (Off-Hand, if dual-wielding):</label>
+                        <input id="weapon-2" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="bow" class="block mb-1">Bow (Ranged Weapon):</label>
+                        <input id="bow" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="armor" class="block mb-1">Armor:</label>
+                        <input id="armor" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="shield" class="block mb-1">Shield:</label>
+                        <input id="shield" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="amulet" class="block mb-1">Amulet/Neck:</label>
+                        <input id="amulet" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="cloak" class="block mb-1">Cloak/Shoulders:</label>
+                        <input id="cloak" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="ring-1" class="block mb-1">Ring 1:</label>
+                        <input id="ring-1" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="ring-2" class="block mb-1">Ring 2:</label>
+                        <input id="ring-2" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="boots" class="block mb-1">Boots:</label>
+                        <input id="boots" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="gloves" class="block mb-1">Gloves/Hands:</label>
+                        <input id="gloves" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="head" class="block mb-1">Head/Helmet:</label>
+                        <input id="head" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="belt" class="block mb-1">Belt/Waist:</label>
+                        <input id="belt" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="bracers" class="block mb-1">Bracers/Arms:</label>
+                        <input id="bracers" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <!-- Attunement slots (up to 3, general) -->
+                    <div>
+                        <label for="attunement-1" class="block mb-1">Attunement Slot 1:</label>
+                        <input id="attunement-1" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="attunement-2" class="block mb-1">Attunement Slot 2:</label>
+                        <input id="attunement-2" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                    <div>
+                        <label for="attunement-3" class="block mb-1">Attunement Slot 3:</label>
+                        <input id="attunement-3" type="text" class="bg-gray-700 text-white p-2 rounded w-full">
+                    </div>
+                </div>
+                <button id="save-inventory" type="button" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded mt-4">Save Inventory</button>
+            </div>
+        </section>
+        <section id="calculators" class="hidden">
+            <h2 class="text-xl mb-4 accent-color">Calculators</h2>
+            <p>Coming soon: AC, HP, spell slots, etc.</p>
+            <!-- Placeholder for calculators -->
+        </section>
+        <!-- More sections as we add features -->
+    </main>
+    <footer class="bg-gray-800 p-4 text-center">
+        &copy; 2026 Your D&D App
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>
